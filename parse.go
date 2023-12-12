@@ -129,7 +129,10 @@ func (c *driverConfig) resolver() error {
 		iDiscovery = nacos.New(cli)
 	}
 
-	builder := discovery.NewBuilder(iDiscovery, discovery.WithInsecure(true))
+	builder := discovery.NewBuilder(iDiscovery,
+		discovery.WithInsecure(true),
+		discovery.DisableDebugLog(),
+	)
 	// register a global resolver so that the dtmservice can resolve discovery:///your-service-name.
 	resolver.Register(builder)
 	return nil
@@ -216,10 +219,10 @@ func parseEndpoint(endpoint string) (string, error) {
 	if u.Scheme != "grpc" && u.Scheme != "http" {
 		return "", fmt.Errorf("invalid dtm service protocol: %s, only supports grpc, http, e.g. grpc://localhost:36790", u.Scheme)
 	}
-	host, _, err := net.SplitHostPort(u.Host)
+	host, port, err := net.SplitHostPort(u.Host)
 	if err != nil {
 		return "", err
 	}
 
-	return u.Scheme + "_" + host, nil
+	return u.Scheme + "_" + host + "_" + port, nil
 }

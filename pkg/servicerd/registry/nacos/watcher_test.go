@@ -14,7 +14,7 @@ func getCli() naming_client.INamingClient {
 	var (
 		ipAddr      = "127.0.0.1"
 		port        = 8848
-		namespaceID = "3454d2b5-2455-4d0e-bf6d-e033b086bb4c"
+		namespaceID = "public"
 	)
 	namingClient, err := nacoscli.NewNamingClient(ipAddr, port, namespaceID)
 	if err != nil {

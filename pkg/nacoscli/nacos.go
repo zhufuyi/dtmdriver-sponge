@@ -86,38 +86,6 @@ func setParams(params *Params, opts ...Option) {
 	}
 }
 
-// GetConfig get configuration from nacos
-func GetConfig(params *Params, opts ...Option) (string, []byte, error) {
-	err := params.valid()
-	if err != nil {
-		return "", nil, err
-	}
-
-	setParams(params, opts...)
-
-	// create a dynamic configuration client
-	configClient, err := clients.NewConfigClient(
-		vo.NacosClientParam{
-			ClientConfig:  params.clientConfig,
-			ServerConfigs: params.serverConfigs,
-		},
-	)
-	if err != nil {
-		return "", nil, err
-	}
-
-	// read config content
-	data, err := configClient.GetConfig(vo.ConfigParam{
-		DataId: params.DataID,
-		Group:  params.Group,
-	})
-	if err != nil {
-		return "", nil, err
-	}
-
-	return params.Format, []byte(data), err
-}
-
 // NewNamingClient create a service registration and discovery of nacos client.
 // Note: If parameter WithClientConfig is set, nacosNamespaceID is invalid,
 // if parameter WithServerConfigs is set, nacosIPAddr and nacosPort are invalid.

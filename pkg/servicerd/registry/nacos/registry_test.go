@@ -11,7 +11,7 @@ import (
 func TestNewRegistry(t *testing.T) {
 	nacosIPAddr := "127.0.0.1"
 	nacosPort := 8848
-	nacosNamespaceID := "3454d2b5-2455-4d0e-bf6d-e033b086bb4c"
+	nacosNamespaceID := "public"
 
 	id := "serverName_127.0.0.1"
 	instanceName := "serverName"
