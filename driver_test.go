@@ -5,6 +5,40 @@ import (
 	"time"
 )
 
+func TestSpongeDriver_RegisterService(t *testing.T) {
+	var (
+		targetType  = "etcd"
+		dtmEndpoint = "grpc://127.0.0.1:36790"
+		consulDsn   = "consul://127.0.0.1:8500/dtmservice"
+		etcdDsn     = "etcd://127.0.0.1:2379/dtmservice"
+		nacosDsn    = "nacos://127.0.0.1:8848/dtmservice"
+		err         error
+	)
+
+	d := new(SpongeDriver)
+	t.Log(d.GetName())
+
+	switch targetType {
+	case consulType:
+		// consul
+		err = d.RegisterService(consulDsn, dtmEndpoint)
+	case etcdType:
+		// etcd
+		err = d.RegisterService(etcdDsn, dtmEndpoint)
+	case nacosType:
+		// nacos
+		_ = d.RegisterService(nacosDsn, dtmEndpoint)
+	}
+
+	if err != nil {
+		t.Errorf("register dtm service to %v failed, err=%+v", targetType, err)
+		return
+	}
+
+	t.Log("register dtm service to", targetType, "success")
+	time.Sleep(time.Minute)
+}
+
 func Test_parseTarget(t *testing.T) {
 	targets := []string{
 		"consul://127.0.0.1:8500/dtmservice",
@@ -50,38 +84,4 @@ func Test_parseEndpoint(t *testing.T) {
 		}
 		t.Log(mark)
 	}
-}
-
-func TestSpongeDriver_RegisterService(t *testing.T) {
-	var (
-		targetType  = "etcd"
-		dtmEndpoint = "grpc://127.0.0.1:36790"
-		consulDsn   = "consul://127.0.0.1:8500/dtmservice"
-		etcdDsn     = "etcd://127.0.0.1:2379/dtmservice"
-		nacosDsn    = "nacos://127.0.0.1:8848/dtmservice"
-		err         error
-	)
-
-	d := new(SpongeDriver)
-	t.Log(d.GetName())
-
-	switch targetType {
-	case consulType:
-		// consul
-		err = d.RegisterService(consulDsn, dtmEndpoint)
-	case etcdType:
-		// etcd
-		err = d.RegisterService(etcdDsn, dtmEndpoint)
-	case nacosType:
-		// nacos
-		_ = d.RegisterService(nacosDsn, dtmEndpoint)
-	}
-
-	if err != nil {
-		t.Errorf("register dtm service to %v failed, err=%+v", targetType, err)
-		return
-	}
-
-	t.Log("register dtm service to", targetType, "success")
-	time.Sleep(time.Minute)
 }
